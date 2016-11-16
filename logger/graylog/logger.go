@@ -80,16 +80,7 @@ func (l *Logger) log(level int, message string, context map[string]interface{}) 
 		additionalFields += fmt.Sprintf(`,"_%s": "%v"`, key, value)
 	}
 
-	l.gelf.Log(fmt.Sprintf(`
-		"version": "1.1",
-		"host": "%s",
-		"_facility": "%s",
-		"short_message": "%s",
-		"level": %d,
-		"timestamp": %d%s
-	}`, l.hostname, l.namespace, message, level, time.Now().Unix(), additionalFields))
-
-	fmt.Println(fmt.Sprintf(`
+	l.gelf.Log(fmt.Sprintf(`{
 		"version": "1.1",
 		"host": "%s",
 		"_facility": "%s",

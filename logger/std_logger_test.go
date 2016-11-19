@@ -9,36 +9,6 @@ import (
 )
 
 func TestStdLoggerFormatting(t *testing.T) {
-	tests := []struct {
-		name    string
-		message string
-		prefix  string
-		context map[string]interface{}
-		expect  string
-	}{
-		{
-			name:    "Message only",
-			message: "Hello World",
-			expect:  "[INFO] Hello World\n",
-		},
-		{
-			name:    "Message and prefix",
-			message: "Hello World",
-			prefix:  "prefix",
-			expect:  "[INFO] prefix | Hello World\n",
-		},
-		{
-			name:    "Message, prefix and context",
-			message: "Hello World",
-			prefix:  "prefix",
-			context: logger.Context{
-				"key":    "value",
-				"number": 3,
-			},
-			expect: "[INFO] prefix | Hello World | {\"key\":\"value\",\"number\":3}\n",
-		},
-	}
-
 	for index, test := range tests {
 		t.Run(fmt.Sprintf("Test case #%d", index+1), func(t *testing.T) {
 			var out bytes.Buffer
@@ -48,9 +18,9 @@ func TestStdLoggerFormatting(t *testing.T) {
 			// Do only info for simplicity
 			l.Info(test.message, test.context)
 
-			cleanOutput := out.String()[20:]
-			if cleanOutput != test.expect {
-				t.Errorf("stdLogger.Info = %q, wanted %q", cleanOutput, test.expect)
+			cleanOutput := out.String()
+			if cleanOutput != test.expectStd {
+				t.Errorf("stdLogger.Info = %q, wanted %q", cleanOutput, test.expectStd)
 				return
 			}
 		})
@@ -82,4 +52,8 @@ func TestStdLoggerLevels(t *testing.T) {
 			return
 		}
 	})
+}
+
+func TestStdLoggerDerive(t *testing.T) {
+	t.Error("Not implemented")
 }

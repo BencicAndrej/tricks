@@ -3,12 +3,15 @@ package logger
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/bencicandrej/tricks/clock"
 	"io"
 	"log"
 	"strings"
-	"time"
+)
 
-	"github.com/bencicandrej/tricks/clock"
+const (
+	LEVEL_INFO  = 1
+	LEVEL_ERROR = 3
 )
 
 var Clock clock.Clock = clock.New()
@@ -92,11 +95,11 @@ func NewGelfLogger(output io.Writer, hostname string, facility string) Logger {
 }
 
 func (l *GelfLogger) Info(message string, context map[string]interface{}) {
-	l.log(1, message, context)
+	l.log(LEVEL_INFO, message, context)
 }
 
 func (l *GelfLogger) Error(message string, context map[string]interface{}) {
-	l.log(3, message, context)
+	l.log(LEVEL_ERROR, message, context)
 }
 
 func (l *GelfLogger) Derive(facility string) Logger {
@@ -110,17 +113,18 @@ func (l *GelfLogger) Derive(facility string) Logger {
 func (l *GelfLogger) log(level int, message string, context map[string]interface{}) {
 	additionalFields := ""
 	for key, value := range context {
-		additionalFields += fmt.Sprintf(`,"_%s": "%v"`, key, value)
+		additionalFields += fmt.Sprintf(`,
+	"_%s": "%v"`, key, value)
 	}
 
 	fmt.Fprintf(l.output, `{
-		"version": "1.1",
-		"host": "%s",
-		"_facility": "%s",
-		"short_message": "%s",
-		"level": %d,
-		"timestamp": %d%s
-	}`, l.hostname, l.facility, message, level, time.Now().Unix(), additionalFields)
+	"version": "1.1",
+	"host": "%s",
+	"_facility": "%s",
+	"short_message": "%s",
+	"level": %d,
+	"timestamp": %d%s
+	}`, l.hostname, l.facility, message, level, Clock.Now().Unix(), additionalFields)
 }
 
 type MultiLogger struct {

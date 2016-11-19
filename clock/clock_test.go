@@ -1,9 +1,10 @@
 package clock_test
 
 import (
-	"github.com/bencicandrej/tricks/clock"
 	"testing"
 	"time"
+
+	"github.com/bencicandrej/tricks/clock"
 )
 
 func TestBrokenClock(t *testing.T) {

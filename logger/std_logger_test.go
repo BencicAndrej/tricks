@@ -2,9 +2,10 @@ package logger_test
 
 import (
 	"bytes"
-	"github.com/bencicandrej/tricks/logger"
 	"strings"
 	"testing"
+
+	"github.com/bencicandrej/tricks/logger"
 )
 
 func TestStdLoggerFormatting(t *testing.T) {

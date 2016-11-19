@@ -3,9 +3,10 @@ package logger_test
 import (
 	"bytes"
 	"fmt"
-	"github.com/bencicandrej/tricks/logger"
 	"strings"
 	"testing"
+
+	"github.com/bencicandrej/tricks/logger"
 )
 
 func TestGelfLoggerFormatting(t *testing.T) {

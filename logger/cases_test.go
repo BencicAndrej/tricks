@@ -2,10 +2,11 @@ package logger_test
 
 import (
 	"fmt"
-	"github.com/bencicandrej/tricks/clock"
-	"github.com/bencicandrej/tricks/logger"
 	"os"
 	"time"
+
+	"github.com/bencicandrej/tricks/clock"
+	"github.com/bencicandrej/tricks/logger"
 )
 
 func init() {

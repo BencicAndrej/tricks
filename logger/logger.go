@@ -3,11 +3,12 @@ package logger
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/bencicandrej/tricks/clock"
 	"io"
 	"log"
 	"strings"
 	"time"
+
+	"github.com/bencicandrej/tricks/clock"
 )
 
 var Clock clock.Clock = clock.New()

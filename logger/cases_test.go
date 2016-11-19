@@ -1,6 +1,22 @@
 package logger_test
 
-import "github.com/bencicandrej/tricks/logger"
+import (
+	"fmt"
+	"github.com/bencicandrej/tricks/clock"
+	"github.com/bencicandrej/tricks/logger"
+	"os"
+	"time"
+)
+
+func init() {
+	t, err := time.Parse("2006-01-02", "2016-01-02")
+	if err != nil {
+		fmt.Printf("replace clock with a broken one: %v\n", err)
+		os.Exit(1)
+	}
+
+	logger.Clock = clock.NewBrokenClock(t)
+}
 
 var tests = []struct {
 	name       string
@@ -13,14 +29,14 @@ var tests = []struct {
 	{
 		name:       "Message only",
 		message:    "Hello World",
-		expectStd:  "[INFO] Hello World\n",
+		expectStd:  "2016/01/02 00:00:00 [INFO] Hello World\n",
 		expectGelf: "",
 	},
 	{
 		name:       "Message and prefix",
 		message:    "Hello World",
 		prefix:     "prefix",
-		expectStd:  "XXXXXXXXXXXXXXXXXX [INFO] prefix | Hello World\n",
+		expectStd:  "2016/01/02 00:00:00 [INFO] prefix | Hello World\n",
 		expectGelf: "",
 	},
 	{
@@ -31,7 +47,7 @@ var tests = []struct {
 			"key":    "value",
 			"number": 3,
 		},
-		expectStd:  "[INFO] prefix | Hello World | {\"key\":\"value\",\"number\":3}\n",
+		expectStd:  "2016/01/02 00:00:00 [INFO] prefix | Hello World | {\"key\":\"value\",\"number\":3}\n",
 		expectGelf: "",
 	},
 }

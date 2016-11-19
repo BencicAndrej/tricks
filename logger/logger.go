@@ -3,10 +3,14 @@ package logger
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/bencicandrej/tricks/clock"
 	"io"
 	"log"
+	"strings"
 	"time"
 )
+
+var Clock clock.Clock = clock.New()
 
 // Context is a shorthand for a map[string]interface.
 type Context map[string]interface{}
@@ -28,7 +32,6 @@ func NewStandardLogger(output io.Writer, prefix string) Logger {
 	return &stdLogger{
 		output: output,
 		prefix: prefix,
-		Logger: log.New(output, "", log.LstdFlags),
 	}
 }
 
@@ -41,7 +44,7 @@ func (l *stdLogger) Error(message string, context map[string]interface{}) {
 }
 
 func (l *stdLogger) log(level string, message string, context map[string]interface{}) {
-	out := "[" + level + "] "
+	out := Clock.Now().Format("2006/01/02 15:04:05") + " [" + level + "] "
 	if l.prefix != "" {
 		out += l.prefix + " | "
 	}
@@ -57,7 +60,11 @@ func (l *stdLogger) log(level string, message string, context map[string]interfa
 		}
 	}
 
-	l.Logger.Print(out)
+	if !strings.HasSuffix(out, "\n") {
+		out = out + "\n"
+	}
+
+	fmt.Fprint(l.output, out)
 }
 
 func (l *stdLogger) Derive(prefix string) Logger {

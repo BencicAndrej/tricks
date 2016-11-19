@@ -2,15 +2,14 @@ package logger_test
 
 import (
 	"bytes"
-	"fmt"
 	"github.com/bencicandrej/tricks/logger"
 	"strings"
 	"testing"
 )
 
 func TestStdLoggerFormatting(t *testing.T) {
-	for index, test := range tests {
-		t.Run(fmt.Sprintf("Test case #%d", index+1), func(t *testing.T) {
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
 			var out bytes.Buffer
 
 			l := logger.NewStandardLogger(&out, test.prefix)

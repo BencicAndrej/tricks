@@ -1,6 +1,12 @@
 package middleware
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/bencicandrej/tricks"
+
+	"github.com/julienschmidt/httprouter"
+)
 
 // Middleware is a function that takes a handler,
 // is expected to do some work before or after provided
@@ -35,6 +41,12 @@ func (stack Stack) Do(handler http.Handler) http.Handler {
 // DoFunc is a shorthand of stack.Do(stack.HandlerFunc(f))
 func (stack Stack) DoFunc(f http.HandlerFunc) http.Handler {
 	return stack.Do(http.HandlerFunc(f))
+}
+
+// DoHTTPRouter is a proxy to Stack.Do() method with an additional adapter
+// for HTTPRouter package.
+func (stack Stack) DoHTTPRouter(handler http.Handler) httprouter.Handle {
+	return tricks.HTTPRouterAdapter(stack.Do(handler))
 }
 
 // Append extends a stack, adding the specified middleware

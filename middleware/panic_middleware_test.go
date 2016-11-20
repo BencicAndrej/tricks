@@ -16,7 +16,7 @@ func TestPanicMiddleware(t *testing.T) {
 		panic("Hold up!")
 	})
 
-	stack := middleware.NewStack(middleware.PanicMiddleware(middleware.DefaultPanicHandler))
+	stack := middleware.NewStack(middleware.PanicMiddleware())
 
 	ts := httptest.NewServer(stack.Do(handler))
 	defer ts.Close()

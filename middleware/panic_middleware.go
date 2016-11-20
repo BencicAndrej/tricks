@@ -21,9 +21,18 @@ func DefaultPanicHandler(w http.ResponseWriter, r *http.Request, err error) {
 	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 }
 
-// PanicMiddleware catches panics and provides the underlying error value
-// to an optional callback.
-func PanicMiddleware(ph PanicHandler) Middleware {
+// PanicMiddleware catches panics and provides the underlying response
+// and error the the special PanicHandler.
+//
+// If no PanicHandler is provided, a default one will be used instead.
+func PanicMiddleware(phs ...PanicHandler) Middleware {
+	var ph PanicHandler
+	if len(phs) == 0 {
+		ph = DefaultPanicHandler
+	} else {
+		ph = phs[0]
+	}
+
 	return func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			var err error

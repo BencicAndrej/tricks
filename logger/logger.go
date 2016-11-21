@@ -11,17 +11,24 @@ import (
 )
 
 const (
-	LEVEL_INFO  = 1
-	LEVEL_ERROR = 3
+	levelDebug = 0
+	levelInfo  = 1
+	levelError = 3
 )
 
-var Clock clock.Clock = clock.New()
+// Clock is the default implementation of something that returns
+// the current time used for logging.
+//
+// This can be overriden in order to enable testing of the logger
+// package using the clock.BrokenClock implementation.
+var Clock = clock.New()
 
 // Context is a shorthand for a map[string]interface.
 type Context map[string]interface{}
 
 // Logger is the simplest possible interface for a logger.
 type Logger interface {
+	Debug(message string, context map[string]interface{})
 	Info(message string, context map[string]interface{})
 	Error(message string, context map[string]interface{})
 	Derive(prefix string) Logger
@@ -33,6 +40,8 @@ type stdLogger struct {
 	*log.Logger
 }
 
+// NewStandardLogger initializes the stdLogger struct and returns
+// it as a Logger interface implementation.
 func NewStandardLogger(output io.Writer, prefix string) Logger {
 	return &stdLogger{
 		output: output,
@@ -96,11 +105,11 @@ func NewGelfLogger(output io.Writer, hostname string, facility string) Logger {
 }
 
 func (l *GelfLogger) Info(message string, context map[string]interface{}) {
-	l.log(LEVEL_INFO, message, context)
+	l.log(levelInfo, message, context)
 }
 
 func (l *GelfLogger) Error(message string, context map[string]interface{}) {
-	l.log(LEVEL_ERROR, message, context)
+	l.log(levelError, message, context)
 }
 
 func (l *GelfLogger) Derive(facility string) Logger {
@@ -133,6 +142,12 @@ func NewMultiLogger(loggers ...Logger) *MultiLogger {
 
 func (l *MultiLogger) Add(logger Logger) {
 	l.loggers = append(l.loggers, logger)
+}
+
+func (l *MultiLogger) Debug(message string, context map[string]interface{}) {
+	for _, logger := range l.loggers {
+		logger.Debug(message, context)
+	}
 }
 
 func (l *MultiLogger) Info(message string, context map[string]interface{}) {

@@ -31,28 +31,16 @@ var tests = []struct {
 		name:      "Message only",
 		message:   "Hello World",
 		expectStd: "2016/01/02 00:00:00 [INFO] Hello World\n",
-		expectGelf: `{
-	"version": "1.1",
-	"host": "localhost",
-	"_facility": "",
-	"short_message": "Hello World",
-	"level": 1,
-	"timestamp": 1451692800
-	}`,
+		expectGelf: `{"version":"1.1","host":"localhost","_facility":"","short_message":"Hello World","level":1,"timestamp":1451692800}
+`,
 	},
 	{
 		name:      "Message and prefix",
 		message:   "Hello World",
 		prefix:    "prefix",
 		expectStd: "2016/01/02 00:00:00 [INFO] prefix | Hello World\n",
-		expectGelf: `{
-	"version": "1.1",
-	"host": "localhost",
-	"_facility": "prefix",
-	"short_message": "Hello World",
-	"level": 1,
-	"timestamp": 1451692800
-	}`,
+		expectGelf: `{"version":"1.1","host":"localhost","_facility":"prefix","short_message":"Hello World","level":1,"timestamp":1451692800}
+`,
 	},
 	{
 		name:    "Message, prefix and context",
@@ -63,15 +51,7 @@ var tests = []struct {
 			"number": 3,
 		},
 		expectStd: "2016/01/02 00:00:00 [INFO] prefix | Hello World | {\"key\":\"value\",\"number\":3}\n",
-		expectGelf: `{
-	"version": "1.1",
-	"host": "localhost",
-	"_facility": "prefix",
-	"short_message": "Hello World",
-	"level": 1,
-	"timestamp": 1451692800,
-	"_key": "value",
-	"_number": "3"
-	}`,
+		expectGelf: `{"version":"1.1","host":"localhost","_facility":"prefix","short_message":"Hello World","level":1,"timestamp":1451692800,"_key":"value","_number":"3"}
+`,
 	},
 }

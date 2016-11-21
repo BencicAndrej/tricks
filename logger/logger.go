@@ -3,10 +3,11 @@ package logger
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/bencicandrej/tricks/clock"
 	"io"
 	"log"
 	"strings"
+
+	"github.com/bencicandrej/tricks/clock"
 )
 
 const (
@@ -113,18 +114,11 @@ func (l *GelfLogger) Derive(facility string) Logger {
 func (l *GelfLogger) log(level int, message string, context map[string]interface{}) {
 	additionalFields := ""
 	for key, value := range context {
-		additionalFields += fmt.Sprintf(`,
-	"_%s": "%v"`, key, value)
+		additionalFields += fmt.Sprintf(`,"_%s":"%v"`, key, value)
 	}
 
-	fmt.Fprintf(l.output, `{
-	"version": "1.1",
-	"host": "%s",
-	"_facility": "%s",
-	"short_message": "%s",
-	"level": %d,
-	"timestamp": %d%s
-	}`, l.hostname, l.facility, message, level, Clock.Now().Unix(), additionalFields)
+	fmt.Fprintf(l.output, `{"version":"1.1","host":"%s","_facility":"%s","short_message":"%s","level":%d,"timestamp":%d%s}
+`, l.hostname, l.facility, message, level, Clock.Now().Unix(), additionalFields)
 }
 
 type MultiLogger struct {

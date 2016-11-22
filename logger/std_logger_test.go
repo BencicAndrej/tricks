@@ -55,5 +55,5 @@ func TestStdLoggerLevels(t *testing.T) {
 }
 
 func TestStdLoggerDerive(t *testing.T) {
-	t.Error("Not implemented")
+	t.FailNow()
 }

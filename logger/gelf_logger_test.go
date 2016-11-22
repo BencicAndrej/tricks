@@ -41,8 +41,8 @@ func TestGelfLoggerLevels(t *testing.T) {
 			return
 		}
 
-		if outMap["level"].(float64) != logger.LEVEL_INFO {
-			t.Errorf("stdLogger.Info level = %d, wanted %d", outMap["level"].(float64), logger.LEVEL_INFO)
+		if outMap["level"].(float64) != 1 {
+			t.Errorf("stdLogger.Info level = %d, wanted %d", int(outMap["level"].(float64)), 1)
 			return
 		}
 	})
@@ -59,8 +59,8 @@ func TestGelfLoggerLevels(t *testing.T) {
 			return
 		}
 
-		if outMap["level"].(float64) != logger.LEVEL_ERROR {
-			t.Errorf("stdLogger.Error level = %d, wanted %d", outMap["level"].(float64), logger.LEVEL_INFO)
+		if outMap["level"].(float64) != 3 {
+			t.Errorf("stdLogger.Error level = %d, wanted %d", int(outMap["level"].(float64)), 3)
 			return
 		}
 	})
